@@ -10,11 +10,11 @@
 
   <div class="select-wrapper">
     <select name="estados" #statesEl
-      (change)="selectOption($event.target.value)">
+      (change)="selectState($event.target.value)">
       <option [value]="state.id" *ngFor="let state of states$ | async">{{state.nome}}</option>
     </select>
   
-    <select name="counties">
+    <select name="counties" (change)="selectCounty($event.target.value)">
       <option value="{{county.id}}" *ngFor="let county of counties$ | async">{{county  .nome}}</option>
     </select>
   </div>
