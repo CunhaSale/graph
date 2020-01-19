@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Chart } from 'chart.js';
 import { ServicoDadosService } from './services/servico-dados.service';
-import { States } from './models/states';
-import { Counties } from './models/counties';
+import { State } from './models/state';
+import { County } from './models/county';
 import { Beneficiaries } from './models/beneficiaries';
-
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -15,12 +14,10 @@ import { tap } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   @ViewChild('graphElement', { static: true }) el: ElementRef;
-  @ViewChild('statesEl', { static: true }) statesEl: ElementRef;
 
   title = 'Beneficiários Bolsa Família dos últimos 12 meses';
-  states$: Observable<States[]>;
-  counties$: Observable<Counties[]>;
-  beneficiaries$: Observable<Beneficiaries[]>;
+  states$: Observable<State[]>;
+  counties$: Observable<County[]>;
 
   beneficiary$: Observable<Beneficiaries[]>;
   countyLastMonths: string[] = [];
@@ -79,19 +76,25 @@ export class AppComponent implements OnInit {
 
     this.states$ = this.servicoDados.getStates();
     this.counties$ = this.servicoDados.getCounties(11);
-    this.beneficiaries$ = this.servicoDados.getBeneficiaries(201906, 1100015);
   }
 
-  selectState(e) {
-    this.counties$ = this.servicoDados.getCounties(e);
+  selectState(stateId) {
+    this.counties$ = this.servicoDados.getCounties(stateId);
   }
 
-  selectCounty(e) {
+  selectCounty(countyID) {
+    this.updateOptions(countyID);
+  }
+
+  private updateOptions(countyID) {
     const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
-    this.updateOptions();
+    this.chart.data.datasets[0].data = this.countyLastMonths = [];
+    this.chart.data.datasets[1].data = this.amount = [];
+    this.chart.update();
     months.forEach(value => {
-      this.servicoDados.getBeneficiaries(`2019${value}`, e)
+      this.servicoDados.getBeneficiaries(`2019${value}`, countyID)
       .pipe(
+        take(1),
         tap(res => {
           if (res[0]) {
             this.countyLastMonths.push(res[0].quantidadeBeneficiados.toString());
@@ -101,11 +104,5 @@ export class AppComponent implements OnInit {
         tap(() => this.chart.update())
       ).subscribe();
     });
-  }
-
-  private updateOptions() {
-    this.chart.data.datasets[0].data = this.countyLastMonths = [];
-    this.chart.data.datasets[1].data = this.amount = [];
-    this.chart.update();
   }
 }

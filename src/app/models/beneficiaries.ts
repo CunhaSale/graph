@@ -1,13 +1,13 @@
 export class Beneficiaries {
     id: number;
     dataReferencia: string;
-    municipio: County[];
+    municipio: CountyIBGE[];
     tipo: Type[];
     valor: number;
     quantidadeBeneficiados: number;
 }
 
-class County {
+class CountyIBGE {
     codigoIBGE: string;
     nomeIBGE: string;
     nomeIBGEsemAcento: string;

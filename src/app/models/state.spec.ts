@@ -1,7 +1,7 @@
-import { States } from './states';
+import { State } from './state';
 
 describe('State', () => {
   it('should create an instance', () => {
-    expect(new States()).toBeTruthy();
+    expect(new State()).toBeTruthy();
   });
 });

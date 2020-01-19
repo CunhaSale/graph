@@ -63,11 +63,18 @@ svg#clouds {
 }
 
 .select-wrapper select{
+    width: initial;
     margin: 0 10px;
+    height: 40px;
+    padding: 8px 16px;
 }
 
 /* Responsive Styles */
 @media screen and (max-width: 575px) {
+    .select-wrapper select{
+        width: 158px;
+    }
+
     svg#rocket-smoke {
         display: none;
         visibility: hidden;

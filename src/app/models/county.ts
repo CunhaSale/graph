@@ -1,6 +1,6 @@
-import { States } from './states';
+import { State } from './state';
 
-export class Counties {
+export class County {
     id: number;
     nome: string;
     microrregiao: Microrregiao[];
@@ -15,5 +15,5 @@ class Microrregiao {
 class Mesorregiao {
     id: number;
     nome: string;
-    UF: States[];
+    UF: State[];
 }
